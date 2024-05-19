@@ -2,9 +2,8 @@ import { ChannelType, Locale, SlashCommandBuilder } from "discord.js";
 import { Command, HelpTypes } from "../handlers/commands.js";
 import { LocaleType } from "../utils/langfinder.js";
 
-const command = new Command();
-
-command.data = new SlashCommandBuilder()
+const command = new Command({
+    data: new SlashCommandBuilder()
     .setName("clear")
     .setNameLocalizations({
         fr: "effacer"
@@ -37,40 +36,42 @@ command.data = new SlashCommandBuilder()
         .setMinValue(1)
         .setMaxValue(100)
         .setRequired(true)
-    );
+    ),
 
-command.execute = async function(interaction) {
-    const channel = interaction.options.getChannel("channel");
-    const amount = interaction.options.getInteger("amount");
-    
-    if(!channel.isTextBased() && !channel.isVoiceBased()) return;
+    async execute(interaction) {
+        const channel = interaction.options.getChannel("channel");
+        const amount = interaction.options.getInteger("amount");
+        
+        if(!channel.isTextBased() && !channel.isVoiceBased()) return;
 
-    channel.bulkDelete(amount, true)
-        .then(async(messages) => {
-            await interaction.reply({ content: command.getMessageByLang(LocaleType.CLEAR).replace("%a", messages.size.toString()), ephemeral: true });
-        })
-        .catch(console.error);
-}
+        channel.bulkDelete(amount, true)
+            .then(async(messages) => {
+                await interaction.reply({ content: command.getMessageByLang(LocaleType.CLEAR)
+                    .replace("%a", messages.size.toString())
+                    .replace("%c", channel.url), ephemeral: true });
+            })
+            .catch(console.error);
+    },
 
+    locales: [
+        {
+            caseofuse: LocaleType.CLEAR,
+            locales: [
+                {
+                    lang: "default",
+                    message: "%a messages have been removed of %c !"
+                },
+                {
+                    lang: Locale.French,
+                    message: "%a messages ont été supprimés de %c !"
+                }
+            ]
+        }
+    ],
 
-command.locales = [
-    {
-        caseofuse: LocaleType.CLEAR,
-        locales: [
-            {
-                lang: "default",
-                message: "%a messages have been removed from this planet !"
-            },
-            {
-                lang: Locale.French,
-                message: "%a messages ont été supprimés de cette planète !"
-            }
-        ]
+    attributes: {
+        type: HelpTypes.Utility
     }
-]
-
-command.attributes = {
-    type: HelpTypes.Utility
-}
+});
 
 export default command;

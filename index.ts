@@ -11,12 +11,16 @@ import { HandledEvent, getEvents } from './handlers/events.js';
 export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
 
-export const client = new Client({ intents: [
+export let client = new Client({ intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent
 ] });
+
+export function setClient(c: Client<true>) {
+    client = c;
+}
 
 export let cooldowns: Collection<string, Collection<string, number>> = new Collection();
 export let events: HandledEvent<any>[] = [];

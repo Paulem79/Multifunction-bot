@@ -51,7 +51,7 @@ export interface TextLocale {
 
 export class Command {
   data: SlashCommandOptionsOnlyBuilder;
-  interaction: ChatInputCommandInteraction<"cached">;
+  interaction?: ChatInputCommandInteraction<"cached">;
   execute: (interaction: ChatInputCommandInteraction<"cached">) => any;
   autocomplete?: (interaction: AutocompleteInteraction<"cached">) => any;
   selectmenu?: (interaction: AnySelectMenuInteraction<"cached">) => any;
@@ -72,6 +72,28 @@ export class Command {
         findLangMessageInLocales(this.locales, caseofuse, this.interaction) ??
         getGlobalByLang(caseofuse, this.interaction)
     ).message;
+  }
+
+  constructor(options?: {
+    data: SlashCommandOptionsOnlyBuilder,
+    execute?: (interaction: ChatInputCommandInteraction<"cached">) => any,
+    autocomplete?: (interaction: AutocompleteInteraction<"cached">) => any,
+    selectmenu?: (interaction: AnySelectMenuInteraction<"cached">) => any,
+    modal?: (interaction: ModalSubmitInteraction<"cached">) => any,
+    button?: (interaction: ButtonInteraction<"cached">) => any,
+    locales?: Texts[],
+    attributes?: Attributes
+  }) {
+
+    if(!options) return;
+    this.data = options.data;
+    this.execute = options.execute;
+    this.autocomplete = options.autocomplete;
+    this.selectmenu = options.selectmenu;
+    this.modal = options.modal;
+    this.button = options.button;
+    this.locales = options.locales;
+    this.attributes = options.attributes;
   }
 }
 
