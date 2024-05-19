@@ -2,7 +2,7 @@ import { ChannelType, Locale, SlashCommandBuilder } from "discord.js";
 import { Command, HelpTypes } from "../handlers/commands.js";
 import { LocaleType } from "../utils/langfinder.js";
 
-const command = new Command({
+export default new Command({
     data: new SlashCommandBuilder()
     .setName("clear")
     .setNameLocalizations({
@@ -39,14 +39,14 @@ const command = new Command({
     ),
 
     async execute(interaction) {
-        const channel = interaction.options.getChannel("channel");
-        const amount = interaction.options.getInteger("amount");
+        const channel = interaction.options.getChannel("channel", true);
+        const amount = interaction.options.getInteger("amount", true);
         
         if(!channel.isTextBased() && !channel.isVoiceBased()) return;
 
         channel.bulkDelete(amount, true)
             .then(async(messages) => {
-                await interaction.reply({ content: command.getMessageByLang(LocaleType.CLEAR)
+                await interaction.reply({ content: this.getMessageByLang(LocaleType.CLEAR)
                     .replace("%a", messages.size.toString())
                     .replace("%c", channel.url), ephemeral: true });
             })
@@ -73,5 +73,3 @@ const command = new Command({
         type: HelpTypes.Utility
     }
 });
-
-export default command;

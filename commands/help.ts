@@ -5,7 +5,7 @@ import { Command, HelpTypes } from '../handlers/commands.js';
 import { LocaleType, getForLocale, getGlobalMessageByLang } from '../utils/langfinder.js';
 import { commands } from '../events/onStart.js';
 
-const command = new Command({
+export default new Command({
     data: new SlashCommandBuilder()
     .setName("help")
     .setDescription("Get " + client.user.username + "'s commands")
@@ -18,9 +18,9 @@ const command = new Command({
 
     async execute(interaction) {
         const embed = new EmbedBuilder()
-            .setTitle(command.getMessageByLang(LocaleType.ALL_COMMANDS))
+            .setTitle(this.getMessageByLang(LocaleType.ALL_COMMANDS))
             .setColor("Blurple")
-            .setDescription(command.getMessageByLang(LocaleType.NAVIGATE));
+            .setDescription(this.getMessageByLang(LocaleType.NAVIGATE));
 
         await interaction.reply({ embeds: [embed], components: [getSelectMenu(interaction)] });
     },
@@ -107,8 +107,6 @@ const command = new Command({
         type: HelpTypes.Utility
     }
 });
-
-export default command;
 
 function getSelectMenu(interaction: ChatInputCommandInteraction<CacheType> | AnySelectMenuInteraction<CacheType>){
   let enums: Array<StringSelectMenuOptionBuilder> = [];

@@ -76,7 +76,7 @@ export class Command {
 
   constructor(options?: {
     data: SlashCommandOptionsOnlyBuilder,
-    execute?: (interaction: ChatInputCommandInteraction<"cached">) => any,
+    execute: (interaction: ChatInputCommandInteraction<"cached">) => any,
     autocomplete?: (interaction: AutocompleteInteraction<"cached">) => any,
     selectmenu?: (interaction: AnySelectMenuInteraction<"cached">) => any,
     modal?: (interaction: ModalSubmitInteraction<"cached">) => any,

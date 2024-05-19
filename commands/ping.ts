@@ -2,7 +2,7 @@ import { Locale, SlashCommandBuilder } from "discord.js";
 import { Command, HelpTypes } from "../handlers/commands.js";
 import { LocaleType } from "../utils/langfinder.js";
 
-const command = new Command({
+export default new Command({
     data: new SlashCommandBuilder()
     .setName("latency")
     .setNameLocalizations({
@@ -15,7 +15,7 @@ const command = new Command({
 
     async execute(interaction) {
         await interaction.reply({
-            content: command.getMessageByLang(LocaleType.LATENCY_REPLY)
+            content: this.getMessageByLang(LocaleType.LATENCY_REPLY)
                 .replace("%p", ((Date.now() - interaction.createdTimestamp)*2).toString()),
             ephemeral: true
         });
@@ -41,5 +41,3 @@ const command = new Command({
         type: HelpTypes.Utility
     }
 });
-
-export default command;
