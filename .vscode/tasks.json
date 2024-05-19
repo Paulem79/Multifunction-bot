@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Build",
+        "dependsOn": [
+          "Bot"
+        ]
+      },
+      {
+        "label": "Bot",
+        "type": "shell",
+        "command": "tsc -p ./",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      }
+    ]
+  }
+  
