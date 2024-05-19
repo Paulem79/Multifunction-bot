@@ -47,12 +47,14 @@ export enum LocaleType {
     UNAUTHORIZED,
     ERROR,
     WAIT,
+
     // Ping
-    LATENCY_WAIT,
     LATENCY_REPLY,
+
     // Help
     NAVIGATE,
     ALL_COMMANDS,
+    
     // Clear
     CLEAR,
 }
