@@ -49,7 +49,8 @@ export default {
             setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
     
             try {
-                return await slashCommand.execute(interaction, slashCommand.locales);
+                slashCommand.interaction = interaction;
+                return await slashCommand.execute(interaction);
             } catch (err) {
                 await interaction.reply({
                     content: getGlobalMessageByLang(LocaleType.ERROR, interaction),
@@ -64,7 +65,7 @@ export default {
             const slashCommand = commands.find(c => c.data.name === interaction.commandName);
     
             try {
-                await slashCommand.autocomplete(interaction, slashCommand.locales);
+                await slashCommand.autocomplete(interaction);
             } catch (error) {
                 console.error(error);
             }
@@ -78,7 +79,7 @@ export default {
             const slashCommand = commands.find(c => c.data.name === interaction.message.interaction.commandName);
     
             try {
-                await slashCommand.selectmenu(interaction, slashCommand.locales);
+                await slashCommand.selectmenu(interaction);
             } catch (error) {
                 console.error(error);
             }
@@ -92,7 +93,7 @@ export default {
             const slashCommand = commands.find(c => c.data.name === interaction.message.interaction.commandName);
     
             try {
-                await slashCommand.modal(interaction, slashCommand.locales);
+                await slashCommand.modal(interaction);
             } catch (error) {
                 console.error(error);
             }
@@ -106,7 +107,7 @@ export default {
             const slashCommand = commands.find(c => c.data.name === interaction.message.interaction.commandName);
     
             try {
-                await slashCommand.button(interaction, slashCommand.locales);
+                await slashCommand.button(interaction);
             } catch (error) {
                 console.error(error);
             }

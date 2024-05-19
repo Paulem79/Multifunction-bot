@@ -1,7 +1,7 @@
-import { AnySelectMenuInteraction, AutocompleteInteraction, ButtonInteraction, ChatInputCommandInteraction, Client, Locale, ModalSubmitInteraction, SlashCommandBuilder } from 'discord.js';
+import { AnySelectMenuInteraction, AutocompleteInteraction, ButtonInteraction, ChatInputCommandInteraction, Client, Locale, ModalSubmitInteraction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder } from 'discord.js';
 import path from "path";
 import fs from "fs";
-import { LocaleType } from '../utils/langfinder.js';
+import { findLangMessageInLocales, getGlobalByLang, LocaleType } from '../utils/langfinder.js';
 
 export class HelpTypes {
   public static Alls: HelpTypes[] = [];
@@ -49,15 +49,30 @@ export interface TextLocale {
   message: string;
 }
 
-export interface Command {
-  data:  SlashCommandBuilder;
-  execute: (interaction: ChatInputCommandInteraction<"cached">, locales?: Texts[]) => any;
-  autocomplete?: (interaction: AutocompleteInteraction<"cached">, locales?: Texts[]) => any;
-  selectmenu?: (interaction: AnySelectMenuInteraction<"cached">, locales?: Texts[]) => any;
-  modal?: (interaction: ModalSubmitInteraction<"cached">, locales?: Texts[]) => any;
-  button?: (interaction: ButtonInteraction<"cached">, locales?: Texts[]) => any;
+export class Command {
+  data: SlashCommandOptionsOnlyBuilder;
+  interaction: ChatInputCommandInteraction<"cached">;
+  execute: (interaction: ChatInputCommandInteraction<"cached">) => any;
+  autocomplete?: (interaction: AutocompleteInteraction<"cached">) => any;
+  selectmenu?: (interaction: AnySelectMenuInteraction<"cached">) => any;
+  modal?: (interaction: ModalSubmitInteraction<"cached">) => any;
+  button?: (interaction: ButtonInteraction<"cached">) => any;
   locales?: Texts[];
   attributes?: Attributes;
+
+  /**
+   * Find the message locale from the slashcommand locales or the global locales, with the case of use and the user locale (interaction)
+   * @param locales The slashcommand locales, can be null to directly use the global locales
+   * @param caseofuse The case of use of the message, used to get him
+   * @param interaction The user locale, faster to type with interaction.locale
+   * @returns 
+   */
+  public getMessageByLang(caseofuse: LocaleType){
+    return (
+        findLangMessageInLocales(this.locales, caseofuse, this.interaction) ??
+        getGlobalByLang(caseofuse, this.interaction)
+    ).message;
+  }
 }
 
 export interface Attributes {

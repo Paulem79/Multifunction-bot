@@ -17,30 +17,14 @@ export function getGlobalMessageByLang(caseofuse: LocaleType, interaction: BaseI
  * @param interaction The user locale, faster to type with interaction.locale
  * @returns 
  */
-function getGlobalByLang(caseofuse: LocaleType, interaction: BaseInteraction<CacheType>){
+export function getGlobalByLang(caseofuse: LocaleType, interaction: BaseInteraction<CacheType>){
     return (
         globalLocales.find(l => l.caseofuse == caseofuse).locales.find(locale => locale.lang == interaction.locale) ??
         globalLocales.find(l => l.caseofuse == caseofuse).locales.find(locale => locale.lang == "default")
     );
 }
 
-/**
- * Find the message locale from the slashcommand locales or the global locales, with the case of use and the user locale (interaction)
- * @param locales The slashcommand locales, can be null to directly use the global locales
- * @param caseofuse The case of use of the message, used to get him
- * @param interaction The user locale, faster to type with interaction.locale
- * @returns 
- */
-export function getMessageByLang(locales: Texts[] | null, caseofuse: LocaleType, interaction: BaseInteraction<CacheType>){
-    if(locales == null) return getGlobalMessageByLang(caseofuse, interaction);
-
-    return (
-        findLangMessageInLocales(locales, caseofuse, interaction) ??
-        getGlobalByLang(caseofuse, interaction)
-    ).message;
-}
-
-function findLangMessageInLocales(locales: Texts[], caseofuse: LocaleType, interaction: BaseInteraction<CacheType>) {
+export function findLangMessageInLocales(locales: Texts[], caseofuse: LocaleType, interaction: BaseInteraction<CacheType>) {
     if(locales != globalLocales && locales.find(l => l.caseofuse == caseofuse) == undefined) return getGlobalByLang(caseofuse, interaction);
 
     return (

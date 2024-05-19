@@ -1,43 +1,45 @@
 import { Locale, SlashCommandBuilder } from "discord.js";
 import { Command, HelpTypes } from "../handlers/commands.js";
-import { getMessageByLang, LocaleType } from "../utils/langfinder.js";
+import { LocaleType } from "../utils/langfinder.js";
 
-export default {
-    data: new SlashCommandBuilder()
-        .setName("latency")
-        .setNameLocalizations({
-            fr: "latence"
-        })
-        .setDescription("Get the bot's latency.")
-        .setDescriptionLocalizations({
-            fr: "Obtenir la latence du bot."
-        }),
+const command = new Command();
 
-    async execute(interaction, locales) {
-        await interaction.reply({
-            content: getMessageByLang(locales, LocaleType.LATENCY_REPLY, interaction)
-                .replace("%p", ((Date.now() - interaction.createdTimestamp)*2).toString()),
-            ephemeral: true
-        });
-    },
+command.data = new SlashCommandBuilder()
+    .setName("latency")
+    .setNameLocalizations({
+        fr: "latence"
+    })
+    .setDescription("Get the bot's latency.")
+    .setDescriptionLocalizations({
+        fr: "Obtenir la latence du bot."
+    });
 
-    locales: [
-        {
-            caseofuse: LocaleType.LATENCY_REPLY,
-            locales: [
-                {
-                    lang: "default",
-                    message: "🏓 Bot's latency is %pms !"
-                },
-                {
-                    lang: Locale.French,
-                    message: "🏓 La latence du bot est de %pms !"
-                }
-            ]
-        }
-    ],
+command.execute = async function(interaction) {
+    await interaction.reply({
+        content: command.getMessageByLang(LocaleType.LATENCY_REPLY)
+            .replace("%p", ((Date.now() - interaction.createdTimestamp)*2).toString()),
+        ephemeral: true
+    });
+}
 
-    attributes: {
-        type: HelpTypes.Utility
+command.locales = [
+    {
+        caseofuse: LocaleType.LATENCY_REPLY,
+        locales: [
+            {
+                lang: "default",
+                message: "🏓 Bot's latency is %pms !"
+            },
+            {
+                lang: Locale.French,
+                message: "🏓 La latence du bot est de %pms !"
+            }
+        ]
     }
-} as Command
+],
+
+command.attributes = {
+    type: HelpTypes.Utility
+}
+
+export default command;
