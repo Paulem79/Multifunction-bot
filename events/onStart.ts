@@ -12,7 +12,11 @@ export default {
     async listener(c) {
         setClient(c);
 
-        commands = await getCommands(__dirname, "commands", c);
+        try {
+            commands = await getCommands(__dirname, "commands", c);
+        } catch(err) {
+            console.error(err);
+        }
 
         setInterval(() => {
             c.user.setActivity(`${c.guilds.cache.size} serveurs`, { type: ActivityType.Watching });
